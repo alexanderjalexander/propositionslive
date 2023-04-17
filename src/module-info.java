@@ -4,5 +4,5 @@ module propositionslive {
     requires javafx.controls;
     requires javafx.fxml;
     exports com.propositions;
-    opens com.propositions to javafx.graphics;
+    opens com.propositions to javafx.fxml;
 }
