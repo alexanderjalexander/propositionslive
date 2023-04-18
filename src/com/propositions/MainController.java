@@ -3,6 +3,7 @@ package com.propositions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -11,13 +12,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
-import java.util.ArrayList;
-
 public class MainController {
 
     @FXML
     private ListView<Pane> propView = new ListView<>();
-    private ObservableList<Pane> props = FXCollections.observableArrayList();;
+    private ObservableList<Pane> props = FXCollections.observableArrayList();
 
     @FXML
     private TextField propField;
@@ -34,13 +33,22 @@ public class MainController {
             // Attempt to parse the user input.
 
 
+            HBox prop = new HBox(25);
 
             Label proposition = new Label(propField.getText());
             Label result = new Label();
             HBox.setHgrow(result, Priority.ALWAYS);
-            Button remove = new Button("X");
 
-            HBox prop = new HBox(25);
+            Button remove = new Button("X");
+            remove.setOnAction(new EventHandler<>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    props.remove(prop);
+                }
+            });
+
+
             prop.setAlignment(Pos.CENTER_LEFT);
             prop.getChildren().addAll(remove, proposition, new Label("->"), result);
 
@@ -64,9 +72,7 @@ public class MainController {
         propField.clear(); */
     }
 
-    public void remove_prop(ActionEvent e) {
 
-    }
 
 
 }
