@@ -9,12 +9,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
+import javafx.scene.text.Text;
 
 public class MainController {
 
+    // Set up proposition viewport
     @FXML
     private ListView<Pane> propView = new ListView<>();
     private ObservableList<Pane> props = FXCollections.observableArrayList();
@@ -22,8 +23,25 @@ public class MainController {
     @FXML
     private TextField propField;
 
+    // Set up proposition console viewport.
+    @FXML
+    private ListView<Pane> propConsole = new ListView<>();
+    private ObservableList<Pane> propConsoleEntries = FXCollections.observableArrayList();
+
+    public void consoleprintln(String s){
+        System.out.println(s);
+
+        // Create the text to print out.
+        FlowPane text = new FlowPane();
+        text.getChildren().add(new Label(s));
+
+        // Add it to the list view & update it
+        propConsoleEntries.add(text);
+        propConsole.setItems(propConsoleEntries);
+    }
 
     public void new_simple(ActionEvent e) {
+        // If empty, do not parse. Warn user.
         if (propField.getText().isEmpty()) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Empty Input Error");
@@ -42,6 +60,9 @@ public class MainController {
                 alert.show();
                 return;
             }
+
+            // Print out for debugging purposes.
+            consoleprintln("Interpreted \"" + propField.getText() + "\" as: " + interp.parse + "\tMode: Simple.");
 
             // Create the new HBox to put inside the ListView
             HBox prop = new HBox(25);
@@ -66,6 +87,7 @@ public class MainController {
     }
 
     public void new_complex(ActionEvent e) {
+        // If it's empty, do not parse. Warn user.
         if (propField.getText().isEmpty()) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Empty Input Error");
@@ -86,6 +108,9 @@ public class MainController {
                 return;
             }
 
+            // Print out tree, debugging purposes
+            consoleprintln("Interpreted \"" + propField.getText() + "\" as: " + interp.parse + "\tMode: Complex.");
+
             // Create the new HBox to put inside the ListView
             HBox prop = new HBox(25);
             Button remove = new Button("X");
@@ -96,19 +121,20 @@ public class MainController {
             Label proposition = new Label(propField.getText());
 
             // Create new text fields for each proposition
-            HBox propvalues = new HBox(10);
+            VBox propvalues = new VBox(10);
             for (String i : interp.truthmaps.keySet()) {
                 Label proplabel = new Label(i + ": ");
                 TextField input = new TextField();
                 input.setPromptText("\"" + i + "\"'s Truth Value");
                 input.setId(i);
+
                 propvalues.getChildren().add(proplabel);
                 propvalues.getChildren().add(input);
             }
             propvalues.setAlignment(Pos.CENTER_LEFT);
 
-            Label result = new Label(interp.truth_value ? "TRUE" : "FALSE");
-            HBox.setHgrow(result, Priority.ALWAYS);
+            Label result = new Label("");
+            VBox.setVgrow(result, Priority.ALWAYS);
             prop.setAlignment(Pos.CENTER_LEFT);
 
             Button interpret = new Button("INTERPRET");
@@ -118,7 +144,7 @@ public class MainController {
                     // Iterate through, updating the hashmap as needed
                     for (String i : interp.truthmaps.keySet()) {
                         for (Node j : propvalues.getChildren()) {
-                            if (j instanceof TextField) {
+                            if ((j.getId() == i) && (j instanceof TextField)) {
                                 if ( ((TextField)j).getText().compareToIgnoreCase("t") == 0 ) {
                                     interp.truthmaps.replace(i, true);
                                 } else if ( ((TextField)j).getText().compareToIgnoreCase("true") == 0 ) {
@@ -137,19 +163,30 @@ public class MainController {
                             }
                         }
                     }
+
+                    // Print out each prop and truth values to system console.
+                    consoleprintln("Updating Truth Values of Proposition: " + interp.parse);
+                    for (String i : interp.truthmaps.keySet()) {
+                        consoleprintln(i + "\t" + interp.truthmaps.get(i));
+                    }
+
                     // Re-evaluate :)
                     interp.complex_eval();
                     result.setText(interp.truth_value ? "TRUE" : "FALSE");
                 }
             });
 
+            // Add all elements to the proposition
             prop.getChildren().addAll(remove, proposition, propvalues, interpret, new Label("->"), result);
 
+            // Add it to the list view & update it
             props.add(prop);
             propView.setItems(props);
         }
+        // Clear user-input field.
         propField.clear();
     }
+
 
     public void insert_conjunction(ActionEvent e) {
         propField.setText(propField.getText() + "&");

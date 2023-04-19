@@ -16,7 +16,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         stage.setTitle("Propositions LIVE");
-        stage.setMinHeight(360);
+        stage.setMinHeight(480);
         stage.setMinWidth(480);
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
         stage.setScene(new Scene(root));
