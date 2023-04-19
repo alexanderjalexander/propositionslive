@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.*;
 import javafx.scene.layout.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class MainController {
@@ -33,7 +34,24 @@ public class MainController {
 
         // Create the text to print out.
         FlowPane text = new FlowPane();
-        text.getChildren().add(new Label(s));
+        Label print = new Label(s);
+        print.setWrapText(true);
+        text.getChildren().add(print);
+
+        // Add it to the list view & update it
+        propConsoleEntries.add(text);
+        propConsole.setItems(propConsoleEntries);
+    }
+
+    public void consoleerrorln(String s){
+        System.err.println(s);
+
+        // Create the text to print out.
+        FlowPane text = new FlowPane();
+        Label err = new Label(s);
+        err.setWrapText(true);
+        err.setTextFill(Color.RED);
+        text.getChildren().add(err);
 
         // Add it to the list view & update it
         propConsoleEntries.add(text);
@@ -47,6 +65,7 @@ public class MainController {
             alert.setTitle("Empty Input Error");
             alert.setContentText("Cannot parse an empty string. Try again!");
             alert.show();
+            consoleerrorln("Error: Cannot parse an empty string.\nStopping interpretation sequence.");
         } else {
             // Attempt to parse the user input.
             PropositionInterpreter interp;
@@ -55,9 +74,10 @@ public class MainController {
             } catch (Exception error) {
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Interpreting Error");
-                alert.setContentText("Error when interpreting string '" + propField.getText() + "': "
-                    + error.toString());
+                alert.setContentText("Error when interpreting string '" + propField.getText() + "': \n\"" + error.toString() + "\"");
                 alert.show();
+                consoleerrorln("Error: Problem when interpreting string '" + propField.getText() + "': \n\"" + error.toString() + "\"");
+                consoleerrorln("Stopping interpretation sequence.");
                 return;
             }
 
@@ -65,11 +85,14 @@ public class MainController {
             consoleprintln("Interpreted \"" + propField.getText() + "\" as: " + interp.parse + "\tMode: Simple.");
 
             // Create the new HBox to put inside the ListView
-            HBox prop = new HBox(25);
+            FlowPane prop = new FlowPane();
+            prop.setVgap(10);
+            prop.setHgap(25);
+            prop.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            prop.setPrefWrapLength(Region.USE_COMPUTED_SIZE);
             Button remove = new Button("X");
             Label proposition = new Label(propField.getText());
             Label result = new Label(interp.truth_value ? "TRUE" : "FALSE");
-            HBox.setHgrow(result, Priority.ALWAYS);
 
             remove.setOnAction(new EventHandler<>() {
                 @Override
@@ -78,7 +101,6 @@ public class MainController {
 
             prop.setAlignment(Pos.CENTER_LEFT);
             prop.getChildren().addAll(remove, proposition, new Label("->"), result);
-
 
             props.add(prop);
             propView.setItems(props);
@@ -93,6 +115,7 @@ public class MainController {
             alert.setTitle("Empty Input Error");
             alert.setContentText("Cannot parse an empty string. Try again!");
             alert.show();
+            consoleerrorln("Error: Cannot parse an empty string.\nStopping interpretation sequence.");
         }
         else {
             // Attempt to parse the user input.
@@ -102,9 +125,10 @@ public class MainController {
             } catch (Exception error) {
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Interpreting Error");
-                alert.setContentText("Error when interpreting string '" + propField.getText() + "': "
-                        + error.toString());
+                alert.setContentText("Error when interpreting string '" + propField.getText() + "': \n\"" + error.toString() + "\"");
                 alert.show();
+                consoleerrorln("Error: Problem when interpreting string '" + propField.getText() + "': \n\"" + error.toString() + "\"");
+                consoleerrorln("Stopping interpretation sequence.");
                 return;
             }
 
