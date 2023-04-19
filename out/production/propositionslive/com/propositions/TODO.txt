@@ -25,16 +25,20 @@ PROPOSITION SYNTAX ERROR DETECTION
 EVALUATING A GIVEN PROPOSITION AST
 	--> PropositionInterpreter.java
 	--> PropositionInterpreterTest.java
+CREATING GUI FOR THE PROGRAM
+    --> Main.java
+    --> MainController.java
+    --> main.fxml
+    DEP javafx (thru Maven)
+    * Simple & Complex Proposition Evaluation
 
 ----- TODOS ARE BELOW -----
 GENERATING TRUTH TABLES
     * Given any proposition, generate truth-table of the entire proposition, with every 
 CREATING GUI FOR THE PROGRAM
-    * JavaFX!!!
-    * Tab for Evaluating Propositions By Hand
-    * You can press a button that makes either SimpleEvaluators or ComplexEvaluators
-    * For Simple, it just assumes all propositions are true
-    * Need to figure out stepping through a proposition
+    * User-Console Tab
+    * Truth Table Tab
+    * Tree Method Tab
 TREE METHOD ALGORITHM
     * Assuming Several Statements Evaluate to True, find the respective TV's of Props
     * Create a new tree for the statements, and go from there
