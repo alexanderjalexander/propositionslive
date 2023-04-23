@@ -129,27 +129,27 @@ public class PropositionInterpreter {
         if (root instanceof Expr.BinaryOperation) {
             // Either an AND, OR, IMPLIES, or IFF
             switch(((Expr.BinaryOperation)root).operation.type) {
-                case AND -> {
+                case AND : {
                     boolean left = simple_evaluator(((Expr.BinaryOperation)root).left);
                     boolean right = simple_evaluator(((Expr.BinaryOperation)root).right);
                     return Propositions.and(left, right);
                 }
-                case OR -> {
+                case OR : {
                     boolean left = simple_evaluator(((Expr.BinaryOperation)root).left);
                     boolean right = simple_evaluator(((Expr.BinaryOperation)root).right);
                     return Propositions.or(left, right);
                 }
-                case IMPLIES -> {
+                case IMPLIES : {
                     boolean left = simple_evaluator(((Expr.BinaryOperation)root).left);
                     boolean right = simple_evaluator(((Expr.BinaryOperation)root).right);
                     return Propositions.implies(left, right);
                 }
-                case IF_AND_ONLY_IF -> {
+                case IF_AND_ONLY_IF : {
                     boolean left = simple_evaluator(((Expr.BinaryOperation)root).left);
                     boolean right = simple_evaluator(((Expr.BinaryOperation)root).right);
                     return Propositions.ifAndOnlyIf(left, right);
                 }
-                default -> throw error(((Expr.BinaryOperation)root).operation, "Binary Operation Expression has invalid Operation Token");
+                default : throw error(((Expr.BinaryOperation)root).operation, "Binary Operation Expression has invalid Operation Token");
             }
         } else if (root instanceof Expr.Unary) {
             // UNARY Operations
@@ -208,27 +208,27 @@ public class PropositionInterpreter {
         if (root instanceof Expr.BinaryOperation) {
             // Either an AND, OR, IMPLIES, or IFF
             switch(((Expr.BinaryOperation)root).operation.type) {
-                case AND -> {
+                case AND : {
                     boolean left = complex_evaluator(((Expr.BinaryOperation)root).left, truthm );
                     boolean right = complex_evaluator(((Expr.BinaryOperation)root).right, truthm );
                     return Propositions.and(left, right);
                 }
-                case OR -> {
+                case OR : {
                     boolean left = complex_evaluator(((Expr.BinaryOperation)root).left, truthm );
                     boolean right = complex_evaluator(((Expr.BinaryOperation)root).right, truthm );
                     return Propositions.or(left, right);
                 }
-                case IMPLIES -> {
+                case IMPLIES : {
                     boolean left = complex_evaluator(((Expr.BinaryOperation)root).left, truthm );
                     boolean right = complex_evaluator(((Expr.BinaryOperation)root).right, truthm );
                     return Propositions.implies(left, right);
                 }
-                case IF_AND_ONLY_IF -> {
+                case IF_AND_ONLY_IF : {
                     boolean left = complex_evaluator(((Expr.BinaryOperation)root).left, truthm );
                     boolean right = complex_evaluator(((Expr.BinaryOperation)root).right, truthm );
                     return Propositions.ifAndOnlyIf(left, right);
                 }
-                default -> throw error(((Expr.BinaryOperation)root).operation, "Binary Operation Expression has invalid Operation Token");
+                default : throw error(((Expr.BinaryOperation)root).operation, "Binary Operation Expression has invalid Operation Token");
             }
         } else if (root instanceof Expr.Unary) {
             // UNARY Operations
