@@ -1,5 +1,9 @@
 package com.propositions;
 
+import java.awt.*;
+import java.awt.datatransfer.*;
+import java.io.IOException;
+import java.net.URI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,25 +13,82 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 public class MainController {
 
     // Set up proposition viewport
     @FXML
     private ListView<Pane> propView = new ListView<>();
-    private ObservableList<Pane> props = FXCollections.observableArrayList();
+    private final ObservableList<Pane> props = FXCollections.observableArrayList();
 
     @FXML
     private TextField propField;
 
+    // Setting up clipboard parameters
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
     // Set up proposition console viewport.
     @FXML
     private ListView<Pane> propConsole = new ListView<>();
-    private ObservableList<Pane> propConsoleEntries = FXCollections.observableArrayList();
+    private final ObservableList<Pane> propConsoleEntries = FXCollections.observableArrayList();
+
+
+    public void userAlert(String title, String message, Exception error) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message + ":\n\"" + error + "\"");
+        alert.show();
+        consoleerrorln(message + "\n\"" + error + "\"");
+    }
+
+    /**
+     * Copies current proposition from propField to the user's clipboard.'
+     */
+    public void copyPropField() {
+        StringSelection data = new StringSelection(propField.getText());
+        clipboard.setContents(data, data);
+    }
+    /**
+     * Cuts current proposition from propField to the user's clipboard.'
+     */
+    public void cutPropField() {
+        StringSelection data = new StringSelection(propField.getText());
+        clipboard.setContents(data, data);
+        propField.clear();
+    }
+
+    /**
+     * Pastes current proposition to the user's clipboard.'
+     */
+    public void pastePropField() {
+        try {
+            Transferable t = clipboard.getContents(null);
+            if (t != null) {
+                if (t.isDataFlavorSupported(DataFlavor.stringFlavor))
+                    propField.setText(propField.getText() + t.getTransferData(DataFlavor.stringFlavor));
+            }
+        } catch (Exception error) {
+            userAlert("Paste Error", "Error when attempting to paste", error);
+            return;
+        }
+    }
+
+    public void about() {
+        try {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI("https://github.com/alexanderjalexander/propositionslive"));
+            }
+        } catch (Exception error) {
+            userAlert("Website Link Error", "Error when attempting to open up link 'https://github.com/alexanderjalexander/propositionslive'", error);
+            return;
+        }
+    }
 
     public void consoleprintln(String s){
         System.out.println(s);
@@ -61,23 +122,14 @@ public class MainController {
     public void new_simple(ActionEvent e) {
         // If empty, do not parse. Warn user.
         if (propField.getText().isEmpty()) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Empty Input Error");
-            alert.setContentText("Cannot parse an empty string. Try again!");
-            alert.show();
-            consoleerrorln("Error: Cannot parse an empty string.\nStopping interpretation sequence.");
+            userAlert("Empty Input Error", "Cannot parse an empty string. Try again!", new IOException("Empty Input is Invalid."));
         } else {
             // Attempt to parse the user input.
             PropositionInterpreter interp;
             try {
                 interp = new PropositionInterpreter(propField.getText(), true);
             } catch (Exception error) {
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Interpreting Error");
-                alert.setContentText("Error when interpreting string '" + propField.getText() + "': \n\"" + error.toString() + "\"");
-                alert.show();
-                consoleerrorln("Error: Problem when interpreting string '" + propField.getText() + "': \n\"" + error.toString() + "\"");
-                consoleerrorln("Stopping interpretation sequence.");
+                userAlert("Interpreting Error", ("Error when interpreting string '" + propField.getText() + "':"), error);
                 return;
             }
 
@@ -111,11 +163,7 @@ public class MainController {
     public void new_complex(ActionEvent e) {
         // If it's empty, do not parse. Warn user.
         if (propField.getText().isEmpty()) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Empty Input Error");
-            alert.setContentText("Cannot parse an empty string. Try again!");
-            alert.show();
-            consoleerrorln("Error: Cannot parse an empty string.\nStopping interpretation sequence.");
+            userAlert("Empty Input Error", "Cannot parse an empty string. Try again!", new IOException("Empty Input is Invalid."));
         }
         else {
             // Attempt to parse the user input.
@@ -123,12 +171,7 @@ public class MainController {
             try {
                 interp = new PropositionInterpreter(propField.getText(), false, false);
             } catch (Exception error) {
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Interpreting Error");
-                alert.setContentText("Error when interpreting string '" + propField.getText() + "': \n\"" + error.toString() + "\"");
-                alert.show();
-                consoleerrorln("Error: Problem when interpreting string '" + propField.getText() + "': \n\"" + error.toString() + "\"");
-                consoleerrorln("Stopping interpretation sequence.");
+                userAlert("Interpreting Error", ("Error when interpreting string '" + propField.getText() + "':"), error);
                 return;
             }
 
@@ -178,10 +221,9 @@ public class MainController {
                                 } else if ( ((TextField)j).getText().compareToIgnoreCase("false") == 0 ) {
                                     interp.truthmaps.replace(i, false);
                                 } else {
-                                    Alert alert = new Alert(AlertType.ERROR);
-                                    alert.setTitle("Interpreting Error");
-                                    alert.setContentText("Error when interpreting '" + ((TextField)j).getText() + "': Not a valid input.");
-                                    alert.show();
+                                    userAlert("Interpreting Error",
+                                            ("Error when interpreting '" + ((TextField)j).getText() + "': Not a valid input"),
+                                            new IOException("Invalid truth value"));
                                     return;
                                 }
                             }
