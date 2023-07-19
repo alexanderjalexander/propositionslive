@@ -29,16 +29,19 @@ CREATING GUI FOR THE PROGRAM
     --> Main.java
     --> MainController.java
     --> main.fxml
-    DEP javafx (thru Maven)
+    DEP javafx
     * Simple & Complex Proposition Evaluation
+    * Cut/Copy/Paste Functionality
+    * User-Console Tab
 
 ----- TODOS ARE BELOW -----
-GENERATING TRUTH TABLES
-    * Given any proposition, generate truth-table of the entire proposition, with every 
 CREATING GUI FOR THE PROGRAM
-    * User-Console Tab
+    * Keyboard Shortcuts
+    * Different Element ID's for the Different Tabs
     * Truth Table Tab
     * Tree Method Tab
+GENERATING TRUTH TABLES
+    * Given any proposition, generate truth-table of the entire proposition
 TREE METHOD ALGORITHM
     * Assuming Several Statements Evaluate to True, find the respective TV's of Props
     * Create a new tree for the statements, and go from there

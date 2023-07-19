@@ -2,7 +2,9 @@ package com.propositions;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,22 +13,33 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class MainController {
 
+    // Set up overall pane for dark mode toggling
+    @FXML
+    private SplitPane parent;
+    @FXML
+    private ToggleButton darkMode;
+
+    File style = new File("cupertino-dark.css");
+
     // Set up proposition viewport
     @FXML
-    private ListView<Pane> propView = new ListView<>();
+    private ListView<Pane> propView;
     private final ObservableList<Pane> props = FXCollections.observableArrayList();
 
+    // Set up text field
     @FXML
     private TextField propField;
 
@@ -45,6 +58,14 @@ public class MainController {
         alert.setContentText(message + ":\n\"" + error + "\"");
         alert.show();
         consoleerrorln(message + "\n\"" + error + "\"");
+    }
+
+    public void darkmode() throws MalformedURLException {
+        if (darkMode.isSelected()) {
+            parent.getStylesheets().add(style.toURI().toURL().toExternalForm());
+        } else {
+            parent.getStylesheets().remove(style.toURI().toURL().toExternalForm());
+        }
     }
 
     /**
@@ -141,7 +162,8 @@ public class MainController {
             prop.setVgap(10);
             prop.setHgap(25);
             prop.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            prop.setPrefWrapLength(Region.USE_COMPUTED_SIZE);
+            prop.setPrefHeight(Region.USE_COMPUTED_SIZE);
+
             Button remove = new Button("X");
             Label proposition = new Label(propField.getText());
             Label result = new Label(interp.truth_value ? "TRUE" : "FALSE");
@@ -191,12 +213,12 @@ public class MainController {
             VBox propvalues = new VBox(10);
             for (String i : interp.truthmaps.keySet()) {
                 Label proplabel = new Label(i + ": ");
-                TextField input = new TextField();
-                input.setPromptText("\"" + i + "\"'s Truth Value");
-                input.setId(i);
-
+//                TextField input = new TextField();
+//                input.setPromptText("\"" + i + "\"'s Truth Value");
+//                input.setId(i);
+//
                 propvalues.getChildren().add(proplabel);
-                propvalues.getChildren().add(input);
+//                propvalues.getChildren().add(input);
             }
             propvalues.setAlignment(Pos.CENTER_LEFT);
 

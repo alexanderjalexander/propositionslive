@@ -19,6 +19,8 @@ public class Main extends Application {
         stage.setMinHeight(480);
         stage.setMinWidth(480);
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+        //Application.setUserAgentStylesheet(getClass().getResource("cupertino-dark.css").toExternalForm());
+        //root.getStylesheets().add(getClass().getResource("cupertino-dark.css").toExternalForm());
         stage.setScene(new Scene(root));
         stage.show();
     }
