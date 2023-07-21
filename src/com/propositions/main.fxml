@@ -6,36 +6,34 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<SplitPane fx:id="parent" dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="360.0" minWidth="480.0" orientation="VERTICAL" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.propositions.MainController">
-   <items>
-      <MenuBar>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="558.0" prefWidth="791.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.propositions.Main">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="File" />
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
           <Menu mnemonicParsing="false" text="Edit">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#cutPropField" text="Cut Input" />
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#cutPropField" text="Cut Input" />
                   <MenuItem mnemonicParsing="false" onAction="#copyPropField" text="Copy Input" />
                   <MenuItem mnemonicParsing="false" onAction="#pastePropField" text="Paste Input" />
-               </items>
+            </items>
           </Menu>
             <Menu mnemonicParsing="false" text="View">
                <items>
-                  <MenuItem mnemonicParsing="false">
-                     <graphic>
-                        <ToggleButton fx:id="darkMode" mnemonicParsing="false" onAction="#darkmode" text="Dark Mode" />
-                     </graphic>
-                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Dark Mode On/Off" />
                </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -45,62 +43,94 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-         <tabs>
-            <Tab text="Propositions">
+   </top>
+   <center>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="Propositions">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <bottom>
+                        <TabPane maxHeight="-Infinity" prefHeight="150.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                          <tabs>
+                            <Tab text="Input">
+                                 <content>
+                                    <GridPane>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#new_simple" text="SIMPLE" GridPane.columnIndex="1">
+                                             <GridPane.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </GridPane.margin>
+                                          </Button>
+                                          <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#new_complex" text="COMPLEX" GridPane.columnIndex="2">
+                                             <GridPane.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </GridPane.margin>
+                                          </Button>
+                                          <TextField fx:id="propField">
+                                             <GridPane.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
+                                    </GridPane>
+                                 </content>
+                              </Tab>
+                            <Tab text="Debug Console">
+                                 <content>
+                                    <ListView fx:id="propConsole" prefHeight="200.0" prefWidth="200.0" />
+                                 </content>
+                              </Tab>
+                          </tabs>
+                        </TabPane>
+                     </bottom>
                      <left>
-                        <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="155.0" text="Operators" BorderPane.alignment="CENTER">
+                        <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="332.0" prefWidth="160.0" text="Operators" BorderPane.alignment="CENTER">
                            <content>
                               <GridPane>
                                 <columnConstraints>
                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 </columnConstraints>
                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
                                     <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#insert_conjunction" text="Conjunction">
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
                                        <GridPane.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </GridPane.margin>
                                     </Button>
                                     <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#insert_disjunction" text="Disjunction" GridPane.rowIndex="1">
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
                                        <GridPane.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </GridPane.margin>
                                     </Button>
                                     <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#insert_negation" text="Negation" GridPane.rowIndex="2">
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
                                        <GridPane.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </GridPane.margin>
                                     </Button>
                                     <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#insert_condition" text="Condition" GridPane.rowIndex="3">
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
                                        <GridPane.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </GridPane.margin>
                                     </Button>
                                     <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#insert_bicondition" text="Bicondition" GridPane.rowIndex="4">
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
                                        <GridPane.margin>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </GridPane.margin>
@@ -108,67 +138,19 @@
                                  </children>
                               </GridPane>
                            </content>
-                           <BorderPane.margin>
-                              <Insets />
-                           </BorderPane.margin>
                         </TitledPane>
                      </left>
                      <center>
-                        <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Propositions" BorderPane.alignment="CENTER">
-                           <content>
-                              <ListView fx:id="propView" prefHeight="200.0" prefWidth="200.0" />
-                           </content>
-                        </TitledPane>
+                        <ListView fx:id="propView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets />
+                           </BorderPane.margin>
+                        </ListView>
                      </center>
-                     <bottom>
-                        <TabPane prefHeight="250.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-                          <tabs>
-                            <Tab text="Input">
-                                 <content>
-                                    <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" text="Proposition Input">
-                                       <content>
-                                          <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                                            <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                             <children>
-                                                <TextField fx:id="propField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Enter Desired Proposition Here" GridPane.hgrow="ALWAYS" />
-                                                <Button alignment="CENTER" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#new_simple" prefHeight="74.0" text="Simple" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <GridPane.margin>
-                                                      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                                   </GridPane.margin>
-                                                </Button>
-                                                <Button alignment="CENTER" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#new_complex" text="Complex" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                                   <GridPane.margin>
-                                                      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                                   </GridPane.margin>
-                                                </Button>
-                                             </children>
-                                          </GridPane>
-                                       </content></TitledPane>
-                                 </content>
-                            </Tab>
-                            <Tab text="Console">
-                                 <content>
-                                    <TitledPane collapsible="false" text="Debug Console">
-                                       <content>
-                                          <ListView fx:id="propConsole" prefHeight="200.0" prefWidth="200.0" />
-                                       </content>
-                                    </TitledPane>
-                                 </content>
-                            </Tab>
-                          </tabs>
-                        </TabPane>
-                     </bottom>
                   </BorderPane>
                </content>
-            </Tab>
-         </tabs>
+          </Tab>
+        </tabs>
       </TabPane>
-   </items>
-</SplitPane>
+   </center>
+</BorderPane>
