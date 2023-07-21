@@ -43,8 +43,7 @@ public class Main extends Application {
         stage.setMinHeight(480);
         stage.setMinWidth(480);
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main.fxml")));
-        Application.setUserAgentStylesheet(getClass().getResource("cupertino-dark.css").toExternalForm());
-        root.getStylesheets().add(getClass().getResource("cupertino-dark.css").toExternalForm());
+        Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
 
         propView.setId("propView");
         propConsole.setId("propConsole");
@@ -251,7 +250,7 @@ public class Main extends Application {
 
                 RadioButton falsebutton = new RadioButton("False");
                 falsebutton.setToggleGroup(radios);
-                truebutton.setId(i);
+                falsebutton.setId(i);
 
                 propvalue.getChildren().addAll(proplabel, truebutton, falsebutton);
                 propvalues.getChildren().add(propvalue);

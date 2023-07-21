@@ -15,7 +15,7 @@ The *Complex* evaluation method assumes that each proposition has their own uniq
 
 To the left of any proposition lies a remove button, which removes any proposition from the view at any current moment. 
 
-A read-only console is available as a separate tab, next to the user-input tab, allowing anyone to be able to 
+A read-only console is available as a separate tab, next to the user-input tab, allowing the user to see a preliminary debugging view of Propositions LIVE!
 
 ## Truth Tables
 Under Development
