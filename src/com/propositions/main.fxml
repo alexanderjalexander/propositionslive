@@ -31,9 +31,9 @@
                   <MenuItem mnemonicParsing="false" onAction="#pastePropField" text="Paste Input" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="View">
+            <Menu mnemonicParsing="false" onShowing="#update_darkmode_menu" text="View">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Dark Mode On/Off" />
+                  <MenuItem fx:id="darkModeMenu" mnemonicParsing="false" onAction="#darkmode" text="Dark Mode On/Off" />
                </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -53,7 +53,7 @@
                      <bottom>
                         <TabPane maxHeight="-Infinity" prefHeight="150.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                           <tabs>
-                            <Tab text="Input">
+                            <Tab text="Proposition Input">
                                  <content>
                                     <GridPane>
                                       <columnConstraints>
@@ -87,7 +87,7 @@
                                     </GridPane>
                                  </content>
                               </Tab>
-                            <Tab text="Debug Console">
+                            <Tab text="Proposition Console">
                                  <content>
                                     <ListView fx:id="propConsole" prefHeight="200.0" prefWidth="200.0" />
                                  </content>

@@ -1,6 +1,9 @@
 package com.propositions;
 
 import javafx.application.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.MenuItem;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.fxml.FXMLLoader;
@@ -13,8 +16,6 @@ import java.util.Objects;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -29,12 +30,13 @@ import javafx.scene.paint.Color;
 
 import atlantafx.base.theme.*;
 
-
 public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
     }
+
+    private MainProperties properties;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -43,11 +45,14 @@ public class Main extends Application {
         stage.setMinHeight(480);
         stage.setMinWidth(480);
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main.fxml")));
-        Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
 
-        propView.setId("propView");
-        propConsole.setId("propConsole");
-        root.getStylesheets().add(Styles.toDataURI("""
+        // Handle user properties
+        MainProperties.init();
+
+        // Add cell resizing back to the stylesheets.
+        if (MainProperties.INSTANCE.getDarkMode()) {
+            Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
+            root.getStylesheets().add(Styles.toDataURI("""
                 #propView .list-cell {
                     -fx-cell-size: -1;
                 }
@@ -55,16 +60,35 @@ public class Main extends Application {
                     -fx-cell-size: -1;
                 }
                 """));
+        } else {
+            Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
+            root.getStylesheets().add(Styles.toDataURI("""
+                #propView .list-cell {
+                    -fx-cell-size: -1;
+                }
+                #propConsole .list-cell {
+                    -fx-cell-size: -1;
+                }
+                """));
+        }
+
+        propView.setId("propView");
+        propConsole.setId("propConsole");
 
         stage.setScene(new Scene(root));
         stage.show();
+    }
+
+    @Override
+    public void stop() throws IOException {
+        MainProperties.INSTANCE.exit();
     }
 
     // ---------------------------------------------------------
 
     // Set up proposition viewport
     @FXML
-    private ListView<Pane> propView = new ListView<Pane>();
+    private ListView<Pane> propView = new ListView<>();
     private final ObservableList<Pane> props = FXCollections.observableArrayList();
 
     // Set up text field
@@ -76,8 +100,11 @@ public class Main extends Application {
 
     // Set up proposition console viewport.
     @FXML
-    private ListView<Pane> propConsole = new ListView<Pane>();
+    private ListView<Pane> propConsole = new ListView<>();
     private final ObservableList<Pane> propConsoleEntries = FXCollections.observableArrayList();
+
+    @FXML
+    private MenuItem darkModeMenu;
 
 
     public void userAlert(String title, String message, Exception error) {
@@ -88,13 +115,25 @@ public class Main extends Application {
         consoleerrorln(message + "\n\"" + error + "\"");
     }
 
-    /* public void darkmode() throws MalformedURLException {
-        if (darkMode.isSelected()) {
-            parent.getStylesheets().add(style.toURI().toURL().toExternalForm());
+    public void update_darkmode_menu() {
+        System.out.println("CALLED");
+        System.out.println("DarkMode = " + MainProperties.INSTANCE.getDarkMode());
+        if (MainProperties.INSTANCE.getDarkMode()) {
+            darkModeMenu.setText("Light Mode");
         } else {
-            parent.getStylesheets().remove(style.toURI().toURL().toExternalForm());
+            darkModeMenu.setText("Dark Mode");
         }
-    } */
+    }
+
+    public void darkmode() {
+        if (MainProperties.INSTANCE.getDarkMode()) {
+            MainProperties.INSTANCE.setDarkMode(false);
+            Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
+        } else {
+            MainProperties.INSTANCE.setDarkMode(true);
+            Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
+        }
+    }
 
     /**
      * Copies current proposition from propField to the user's clipboard.'
@@ -124,7 +163,6 @@ public class Main extends Application {
             }
         } catch (Exception error) {
             userAlert("Paste Error", "Error when attempting to paste", error);
-            return;
         }
     }
 
@@ -135,7 +173,6 @@ public class Main extends Application {
             }
         } catch (Exception error) {
             userAlert("Website Link Error", "Error when attempting to open up link 'https://github.com/alexanderjalexander/propositionslive'", error);
-            return;
         }
     }
 
@@ -168,7 +205,7 @@ public class Main extends Application {
         propConsole.setItems(propConsoleEntries);
     }
 
-    public void new_simple(ActionEvent e) {
+    public void new_simple() {
         // If empty, do not parse. Warn user.
         if (propField.getText().isEmpty()) {
             userAlert("Empty Input Error", "Cannot parse an empty string. Try again!", new IOException("Empty Input is Invalid."));
@@ -195,10 +232,7 @@ public class Main extends Application {
             Label proposition = new Label(propField.getText());
             Label result = new Label(interp.truth_value ? "TRUE" : "FALSE");
 
-            remove.setOnAction(new EventHandler<>() {
-                @Override
-                public void handle(ActionEvent e) { props.remove(prop); }
-            });
+            remove.setOnAction(e1 -> props.remove(prop));
 
             prop.setAlignment(Pos.CENTER_LEFT);
             prop.getChildren().addAll(remove, proposition, new Label("->"), result);
@@ -209,7 +243,7 @@ public class Main extends Application {
         propField.clear();
     }
 
-    public void new_complex(ActionEvent e) {
+    public void new_complex() {
         // If it's empty, do not parse. Warn user.
         if (propField.getText().isEmpty()) {
             userAlert("Empty Input Error", "Cannot parse an empty string. Try again!", new IOException("Empty Input is Invalid."));
@@ -230,10 +264,7 @@ public class Main extends Application {
             // Create the new HBox to put inside the ListView
             HBox prop = new HBox(25);
             Button remove = new Button("X");
-            remove.setOnAction(new EventHandler<>() {
-                @Override
-                public void handle(ActionEvent e) { props.remove(prop); }
-            });
+            remove.setOnAction(e1 -> props.remove(prop));
             Label proposition = new Label(propField.getText());
 
             // Create radio buttons for each proposition
@@ -262,18 +293,18 @@ public class Main extends Application {
             prop.setAlignment(Pos.CENTER_LEFT);
 
             Button interpret = new Button("INTERPRET");
-            interpret.setOnAction(new EventHandler<>() {
+            interpret.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
                     // Iterate through, updating the hashmap as needed
                     for (String i : interp.truthmaps.keySet()) {
                         for (Node j : propvalues.getChildren()) {
-                            for (Node k : ((HBox )j).getChildren()) {
+                            for (Node k : ((HBox) j).getChildren()) {
                                 if ((Objects.equals(k.getId(), i)) && (k instanceof RadioButton)) {
                                     if (((RadioButton) k).getText().compareToIgnoreCase("True") == 0) {
                                         interp.truthmaps.replace(i, ((RadioButton) k).isSelected());
                                     } else {
-                                        interp.truthmaps.replace(i, ((RadioButton) k).isSelected());
+                                        interp.truthmaps.replace(i, !((RadioButton) k).isSelected());
                                     }
                                 }
                             }
@@ -292,9 +323,6 @@ public class Main extends Application {
                 }
             });
 
-            interp.complex_eval();
-            result.setText(interp.truth_value ? "TRUE" : "FALSE");
-
             // Add all elements to the proposition
             prop.getChildren().addAll(remove, proposition, propvalues, interpret, new Label("->"), result);
 
@@ -307,23 +335,23 @@ public class Main extends Application {
     }
 
 
-    public void insert_conjunction(ActionEvent e) {
+    public void insert_conjunction() {
         propField.setText(propField.getText() + "&");
     }
 
-    public void insert_disjunction(ActionEvent e) {
+    public void insert_disjunction() {
         propField.setText(propField.getText() + "|");
     }
 
-    public void insert_negation(ActionEvent e) {
+    public void insert_negation() {
         propField.setText(propField.getText() + "!");
     }
 
-    public void insert_condition(ActionEvent e) {
+    public void insert_condition() {
         propField.setText(propField.getText() + "->");
     }
 
-    public void insert_bicondition(ActionEvent e) {
+    public void insert_bicondition() {
         propField.setText(propField.getText() + "<->");
     }
 }
