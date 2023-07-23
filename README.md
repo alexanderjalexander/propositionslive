@@ -2,7 +2,7 @@
 Propositions LIVE is a Java program designed to parse and interpret varieties of logical propositions, utilizing a custom interpreter and parser to evaluate user input while also utilizing standard order of precedence for propositions.
 
 # Usage Instructions
-Propositions LIVE requires Java to be installed on the user-system. Once installed, install the Propositions LIVE .jar file, and run it. To use Propositions LIVE, head over to any of the included tabs and start evaluating!
+Propositions LIVE requires Java 17 to be installed on the user-system. The JAR will not run on a JRE purposed for lower versions. Once installed, install the Propositions LIVE .jar file, and run it. Upon creation, it will  To use Propositions LIVE, head over to any of the included tabs and start evaluating!
 
 ## Propositions
 Users can evaluate propositions either using PL's *Simple* method, or the *Complex* method. 
@@ -24,7 +24,7 @@ Under Development
 Under Development
 
 # Development
-Propositions LIVE was developed in IntelliJ IDEA, using Oracle's Java SDK 17.0.2, JavaFX 17.0.6, and Gluon SceneBuilder 19.0.0. This GitHub repo can be used as an entire standalone project, ready to download for use by IntelliJ. Simply download and import the project!
+Propositions LIVE was developed in IntelliJ IDEA, using Oracle's Java SDK 17.0.2, AtlantaFX, JavaFX 20, and Gluon SceneBuilder. This GitHub repo can be used as an entire standalone project, ready to download for use by IntelliJ. Simply download and import the project!
 
 ## Running inside the IDE
 As mentioned before, JavaFX is required to run any of these. To ensure it runs properly inside your IDE, ensure that your project structure contains javafx as an available library.

@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Objects;
 
 import javafx.collections.FXCollections;
@@ -46,8 +47,20 @@ public class Main extends Application {
         stage.setMinWidth(480);
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main.fxml")));
 
+        // Override Default Exception Handler
+        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
+            consoleprintln("Handler caught exception: " + throwable.getMessage() + "\n" + Arrays.toString(throwable.getStackTrace()));
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("A Run-time Exception Occurred");
+            alert.setContentText("The following run-time exception occurred while trying to run your program:\n\"" + throwable.toString() + ": " + throwable.getMessage()
+                    + "\"\nIf the problem persists, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues");
+            alert.show();
+        });
+
         // Handle user properties
         MainProperties.init();
+        System.out.println("Reading User Properties...");
+        System.out.println("MainProperties.getDarkMode() = " + MainProperties.INSTANCE.getDarkMode());
 
         // Add cell resizing back to the stylesheets.
         if (MainProperties.INSTANCE.getDarkMode()) {
@@ -82,6 +95,7 @@ public class Main extends Application {
     @Override
     public void stop() throws IOException {
         MainProperties.INSTANCE.exit();
+        System.out.println("Exiting...");
     }
 
     // ---------------------------------------------------------
@@ -110,22 +124,25 @@ public class Main extends Application {
     public void userAlert(String title, String message, Exception error) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(title);
-        alert.setContentText(message + ":\n\"" + error + "\"");
+        alert.setContentText(message + ":\n\"" + error + "\": \"" + error.getMessage());
         alert.show();
-        consoleerrorln(message + "\n\"" + error + "\"");
+        consoleerrorln(message + "\n\"" + error + "\": \"" + error.getMessage());
     }
 
     public void update_darkmode_menu() {
-        System.out.println("CALLED");
-        System.out.println("DarkMode = " + MainProperties.INSTANCE.getDarkMode());
+
+        System.out.print("update_darkmode_menu() called. ");
         if (MainProperties.INSTANCE.getDarkMode()) {
+            System.out.println("Updating button to \"Light Mode\"");
             darkModeMenu.setText("Light Mode");
         } else {
+            System.out.println("Updating button to \"Dark Mode\"");
             darkModeMenu.setText("Dark Mode");
         }
     }
 
     public void darkmode() {
+        
         if (MainProperties.INSTANCE.getDarkMode()) {
             MainProperties.INSTANCE.setDarkMode(false);
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
@@ -139,6 +156,7 @@ public class Main extends Application {
      * Copies current proposition from propField to the user's clipboard.'
      */
     public void copyPropField() {
+        
         StringSelection data = new StringSelection(propField.getText());
         clipboard.setContents(data, data);
     }
@@ -146,6 +164,7 @@ public class Main extends Application {
      * Cuts current proposition from propField to the user's clipboard.'
      */
     public void cutPropField() {
+        
         StringSelection data = new StringSelection(propField.getText());
         clipboard.setContents(data, data);
         propField.clear();
@@ -155,6 +174,7 @@ public class Main extends Application {
      * Pastes current proposition to the user's clipboard.'
      */
     public void pastePropField() {
+
         try {
             Transferable t = clipboard.getContents(null);
             if (t != null) {
@@ -162,11 +182,14 @@ public class Main extends Application {
                     propField.setText(propField.getText() + t.getTransferData(DataFlavor.stringFlavor));
             }
         } catch (Exception error) {
-            userAlert("Paste Error", "Error when attempting to paste", error);
+            userAlert("Paste Error", "Error when attempting to paste" +
+                    "\nIf the problem persists, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues\"",
+                    error);
         }
     }
 
     public void about() {
+        
         try {
             if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                 Desktop.getDesktop().browse(new URI("https://github.com/alexanderjalexander/propositionslive"));
@@ -177,6 +200,7 @@ public class Main extends Application {
     }
 
     public void consoleprintln(String s){
+        
         System.out.println(s);
 
         // Create the text to print out.
@@ -191,6 +215,7 @@ public class Main extends Application {
     }
 
     public void consoleerrorln(String s){
+        
         System.err.println(s);
 
         // Create the text to print out.
@@ -206,6 +231,7 @@ public class Main extends Application {
     }
 
     public void new_simple() {
+        
         // If empty, do not parse. Warn user.
         if (propField.getText().isEmpty()) {
             userAlert("Empty Input Error", "Cannot parse an empty string. Try again!", new IOException("Empty Input is Invalid."));
@@ -213,9 +239,13 @@ public class Main extends Application {
             // Attempt to parse the user input.
             PropositionInterpreter interp;
             try {
-                interp = new PropositionInterpreter(propField.getText(), true);
-            } catch (Exception error) {
-                userAlert("Interpreting Error", ("Error when interpreting string '" + propField.getText() + "':"), error);
+                interp = new PropositionInterpreter(propField.getText(), false, false);
+            } catch (PropositionParser.ParseError error) {
+                userAlert("Interpreting Error",
+                        ("Error when interpreting string '" + propField.getText() + "':"
+                                + "\nPlease check your proposition and try again."
+                                + "\nIf you believe this is an error, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues"),
+                        error);
                 return;
             }
 
@@ -244,6 +274,7 @@ public class Main extends Application {
     }
 
     public void new_complex() {
+        
         // If it's empty, do not parse. Warn user.
         if (propField.getText().isEmpty()) {
             userAlert("Empty Input Error", "Cannot parse an empty string. Try again!", new IOException("Empty Input is Invalid."));
@@ -253,8 +284,12 @@ public class Main extends Application {
             PropositionInterpreter interp;
             try {
                 interp = new PropositionInterpreter(propField.getText(), false, false);
-            } catch (Exception error) {
-                userAlert("Interpreting Error", ("Error when interpreting string '" + propField.getText() + "':"), error);
+            } catch (PropositionParser.ParseError error) {
+                userAlert("Interpreting Error",
+                        ("Error when interpreting string '" + propField.getText() + "':"
+                        + "\nPlease check your proposition and try again."
+                        + "\nIf you believe this is an error, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues"),
+                        error);
                 return;
             }
 
@@ -336,22 +371,27 @@ public class Main extends Application {
 
 
     public void insert_conjunction() {
+        
         propField.setText(propField.getText() + "&");
     }
 
     public void insert_disjunction() {
+        
         propField.setText(propField.getText() + "|");
     }
 
     public void insert_negation() {
+        
         propField.setText(propField.getText() + "!");
     }
 
     public void insert_condition() {
+        
         propField.setText(propField.getText() + "->");
     }
 
     public void insert_bicondition() {
+        
         propField.setText(propField.getText() + "<->");
     }
 }

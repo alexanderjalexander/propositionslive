@@ -38,8 +38,16 @@ public class MainProperties {
      * If a variable is not present in a class definition
      */
     private void loadProperties() {
-        try (InputStream input = new FileInputStream("resources/config.properties")) {
+        File config_properties = new File("config.properties");
+        try {
+            if (config_properties.createNewFile()) {
+                System.out.println("config.properties created.");
+            } else {
+                System.out.println("config.properties found.");
+            }
 
+            System.out.println("Creating new FileInputStream and reading properties.");
+            InputStream input = new FileInputStream(config_properties);
             prop = new Properties();
 
             prop.load(input);
@@ -54,13 +62,20 @@ public class MainProperties {
                 System.out.println("Reading Property:\tdarkMode\t-->\t" + prop.getProperty("darkMode"));
             }
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            System.out.println("Properties successfully initialized and loaded.");
+
+        } catch (IOException io_ex) {
+            throw new RuntimeException(io_ex);
         }
     }
 
     private void saveProperties() {
-        try (OutputStream output = new FileOutputStream("resources/config.properties")) {
+        File config_properties = new File("config.properties");
+        try {
+
+            System.out.println("\nSaving User Properties...");
+
+            OutputStream output = new FileOutputStream(config_properties);
 
             // set the properties value
             prop.setProperty("darkMode", (getDarkMode() ? "true" : "false") );

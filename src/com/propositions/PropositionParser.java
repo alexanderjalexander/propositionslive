@@ -209,7 +209,7 @@ public class PropositionParser {
 			}
 			return new Expr.Literal(previous());
 		}
-		throw error(peek().type, "Error processing expression");
+		throw error(peek().type, "Expected a second proposition after the operator when processing expression");
 	}
 	
 	// ---------------------------------------------
