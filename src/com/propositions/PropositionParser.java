@@ -96,7 +96,7 @@ public class PropositionParser {
 	
 	// checks to see if the next token is of the expected type
 	// If another token is there, throws an error
-	private PropositionTokenizer.Token consume(TokenType type, String message) {
+	private PropositionTokenizer.Token consume(TokenType type, String message) throws ParseError {
 		if (check(type)) return advance();
 	    throw error(type, message);
 	}

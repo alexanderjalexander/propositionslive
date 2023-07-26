@@ -4,6 +4,7 @@ import javafx.application.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuItem;
+import javafx.scene.text.Font;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +12,8 @@ import javafx.fxml.FXMLLoader;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Objects;
@@ -28,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font.*;
 
 import atlantafx.base.theme.*;
 
@@ -37,11 +41,9 @@ public class Main extends Application {
         launch(args);
     }
 
-    private MainProperties properties;
-
     @Override
     public void start(Stage stage) throws IOException {
-
+        System.out.println("Initializing Propositions LIVE...");
         stage.setTitle("Propositions LIVE");
         stage.setMinHeight(480);
         stage.setMinWidth(480);
@@ -49,12 +51,22 @@ public class Main extends Application {
 
         // Override Default Exception Handler
         Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
-            consoleprintln("Handler caught exception: " + throwable.getMessage() + "\n" + Arrays.toString(throwable.getStackTrace()));
+            // Convert Stack Trace to readable message
+            StringWriter sw = new StringWriter(); PrintWriter pw = new PrintWriter(sw);
+            throwable.printStackTrace(pw);
+
+            // Create the alert
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("A Run-time Exception Occurred");
-            alert.setContentText("The following run-time exception occurred while trying to run your program:\n\"" + throwable.toString() + ": " + throwable.getMessage()
-                    + "\"\nIf the problem persists, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues");
+            alert.setTitle("A runtime exception occurred");
+            alert.setContentText("The following run-time exception occurred while trying to run your program:"
+                    + "\n\n\"" + throwable + ": " + throwable.getMessage()
+                    + "\"\n\n" + "Extra details are covered within the console."
+                    + "\n\nIf the problem persists, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues");
+            alert.setHeight(400); alert.setWidth(200); alert.setResizable(true);
             alert.show();
+
+            // Print error to user-console
+            consoleerrorln("Handler caught exception: " + throwable + "\n" + sw.toString());
         });
 
         // Handle user properties
@@ -88,14 +100,18 @@ public class Main extends Application {
         propView.setId("propView");
         propConsole.setId("propConsole");
 
+        System.out.println("Starting stage...");
+        System.out.println("-----------------");
+
         stage.setScene(new Scene(root));
         stage.show();
     }
 
     @Override
-    public void stop() throws IOException {
-        MainProperties.INSTANCE.exit();
+    public void stop() {
+        System.out.println("-----------------");
         System.out.println("Exiting...");
+        MainProperties.INSTANCE.exit();
     }
 
     // ---------------------------------------------------------
@@ -124,13 +140,14 @@ public class Main extends Application {
     public void userAlert(String title, String message, Exception error) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(title);
-        alert.setContentText(message + ":\n\"" + error + "\": \"" + error.getMessage());
+        alert.setContentText(message + ":\n\"" + error + "\"");
+        alert.setResizable(true);
         alert.show();
-        consoleerrorln(message + "\n\"" + error + "\": \"" + error.getMessage());
+
+        consoleerrorln(message + "\n\"" + error + "\"");
     }
 
     public void update_darkmode_menu() {
-
         System.out.print("update_darkmode_menu() called. ");
         if (MainProperties.INSTANCE.getDarkMode()) {
             System.out.println("Updating button to \"Light Mode\"");
@@ -142,7 +159,6 @@ public class Main extends Application {
     }
 
     public void darkmode() {
-        
         if (MainProperties.INSTANCE.getDarkMode()) {
             MainProperties.INSTANCE.setDarkMode(false);
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
@@ -156,7 +172,6 @@ public class Main extends Application {
      * Copies current proposition from propField to the user's clipboard.'
      */
     public void copyPropField() {
-        
         StringSelection data = new StringSelection(propField.getText());
         clipboard.setContents(data, data);
     }
@@ -164,7 +179,6 @@ public class Main extends Application {
      * Cuts current proposition from propField to the user's clipboard.'
      */
     public void cutPropField() {
-        
         StringSelection data = new StringSelection(propField.getText());
         clipboard.setContents(data, data);
         propField.clear();
@@ -174,7 +188,6 @@ public class Main extends Application {
      * Pastes current proposition to the user's clipboard.'
      */
     public void pastePropField() {
-
         try {
             Transferable t = clipboard.getContents(null);
             if (t != null) {
@@ -189,7 +202,6 @@ public class Main extends Application {
     }
 
     public void about() {
-        
         try {
             if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                 Desktop.getDesktop().browse(new URI("https://github.com/alexanderjalexander/propositionslive"));
@@ -200,7 +212,6 @@ public class Main extends Application {
     }
 
     public void consoleprintln(String s){
-        
         System.out.println(s);
 
         // Create the text to print out.
@@ -215,7 +226,6 @@ public class Main extends Application {
     }
 
     public void consoleerrorln(String s){
-        
         System.err.println(s);
 
         // Create the text to print out.
@@ -231,7 +241,6 @@ public class Main extends Application {
     }
 
     public void new_simple() {
-        
         // If empty, do not parse. Warn user.
         if (propField.getText().isEmpty()) {
             userAlert("Empty Input Error", "Cannot parse an empty string. Try again!", new IOException("Empty Input is Invalid."));
@@ -244,6 +253,13 @@ public class Main extends Application {
                 userAlert("Interpreting Error",
                         ("Error when interpreting string '" + propField.getText() + "':"
                                 + "\nPlease check your proposition and try again."
+                                + "\nIf you believe this is an error, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues"),
+                        error);
+                return;
+            } catch (IllegalArgumentException error) {
+                userAlert("Interpreting Error",
+                        ("Error when interpreting string '" + propField.getText() + "':"
+                                + "\n" + error.getMessage()
                                 + "\nIf you believe this is an error, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues"),
                         error);
                 return;
@@ -260,7 +276,10 @@ public class Main extends Application {
 
             Button remove = new Button("X");
             Label proposition = new Label(propField.getText());
+            proposition.setStyle("-fx-font-style: italic;");
+
             Label result = new Label(interp.truth_value ? "TRUE" : "FALSE");
+            result.setStyle("-fx-font-style: italic;");
 
             remove.setOnAction(e1 -> props.remove(prop));
 
@@ -274,7 +293,6 @@ public class Main extends Application {
     }
 
     public void new_complex() {
-        
         // If it's empty, do not parse. Warn user.
         if (propField.getText().isEmpty()) {
             userAlert("Empty Input Error", "Cannot parse an empty string. Try again!", new IOException("Empty Input is Invalid."));
@@ -301,6 +319,12 @@ public class Main extends Application {
             Button remove = new Button("X");
             remove.setOnAction(e1 -> props.remove(prop));
             Label proposition = new Label(propField.getText());
+            proposition.setStyle("-fx-font-style: italic;");
+
+            Label result = new Label("");
+            result.setStyle("-fx-font-style: italic;");
+
+            // Times New Roman
 
             // Create radio buttons for each proposition
             VBox propvalues = new VBox(10);
@@ -309,57 +333,82 @@ public class Main extends Application {
 
                 Label proplabel = new Label(i + ": ");
                 ToggleGroup radios = new ToggleGroup();
-                RadioButton truebutton = new RadioButton("True");
-                truebutton.setId(i);
-                truebutton.setToggleGroup(radios);
-                truebutton.setSelected(true);
+                RadioButton true_button = new RadioButton("True");
+                true_button.setId(i);
+                true_button.setToggleGroup(radios);
+                true_button.setSelected(true);
+                true_button.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        // Update the truth value of proposition
+                        interp.truthmaps.replace(i, true_button.isSelected());
 
-                RadioButton falsebutton = new RadioButton("False");
-                falsebutton.setToggleGroup(radios);
-                falsebutton.setId(i);
+                        // Print out each prop and truth values to system console.
+                        consoleprintln("Updating Truth Value of Proposition: " + interp.parse);
+                        consoleprintln("\t"+ i + "\t" + interp.truthmaps.get(i));
+                        consoleprintln("\tNew Resulting Truth Value: " + (interp.truth_value ? "TRUE" : "FALSE"));
 
-                propvalue.getChildren().addAll(proplabel, truebutton, falsebutton);
+                        // Re-evaluate :)
+                        interp.complex_eval();
+                        result.setText(interp.truth_value ? "TRUE" : "FALSE");
+                    }
+                });
+
+                RadioButton false_button = new RadioButton("False");
+                false_button.setToggleGroup(radios);
+                false_button.setId(i);
+                false_button.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        // Update the truth value of proposition
+                        interp.truthmaps.replace(i, !false_button.isSelected());
+
+                        // Print out each prop and truth values to system console.
+                        consoleprintln("Updating Truth Value of Proposition: " + interp.parse);
+                        consoleprintln("\t"+ i + "\t" + interp.truthmaps.get(i));
+                        consoleprintln("\tNew Resulting Truth Value: " + (interp.truth_value ? "TRUE" : "FALSE"));
+
+                        // Re-evaluate :)
+                        interp.complex_eval();
+                        result.setText(interp.truth_value ? "TRUE" : "FALSE");
+                    }
+                });
+
+                propvalue.getChildren().addAll(proplabel, true_button, false_button);
                 propvalues.getChildren().add(propvalue);
             }
             propvalues.setAlignment(Pos.CENTER_LEFT);
 
-            Label result = new Label("");
             VBox.setVgrow(result, Priority.ALWAYS);
             prop.setAlignment(Pos.CENTER_LEFT);
 
-            Button interpret = new Button("INTERPRET");
-            interpret.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    // Iterate through, updating the hashmap as needed
-                    for (String i : interp.truthmaps.keySet()) {
-                        for (Node j : propvalues.getChildren()) {
-                            for (Node k : ((HBox) j).getChildren()) {
-                                if ((Objects.equals(k.getId(), i)) && (k instanceof RadioButton)) {
-                                    if (((RadioButton) k).getText().compareToIgnoreCase("True") == 0) {
-                                        interp.truthmaps.replace(i, ((RadioButton) k).isSelected());
-                                    } else {
-                                        interp.truthmaps.replace(i, !((RadioButton) k).isSelected());
-                                    }
-                                }
+            // Iterate through, updating the hashmap as needed
+            for (String i : interp.truthmaps.keySet()) {
+                for (Node j : propvalues.getChildren()) {
+                    for (Node k : ((HBox) j).getChildren()) {
+                        if ((Objects.equals(k.getId(), i)) && (k instanceof RadioButton)) {
+                            if (((RadioButton) k).getText().compareToIgnoreCase("True") == 0) {
+                                interp.truthmaps.replace(i, ((RadioButton) k).isSelected());
+                            } else {
+                                interp.truthmaps.replace(i, !((RadioButton) k).isSelected());
                             }
                         }
                     }
-
-                    // Print out each prop and truth values to system console.
-                    consoleprintln("Updating Truth Values of Proposition: " + interp.parse);
-                    for (String i : interp.truthmaps.keySet()) {
-                        consoleprintln(i + "\t" + interp.truthmaps.get(i));
-                    }
-
-                    // Re-evaluate :)
-                    interp.complex_eval();
-                    result.setText(interp.truth_value ? "TRUE" : "FALSE");
                 }
-            });
+            }
+
+            // Print out each prop and truth values to system console.
+            consoleprintln("Updating Truth Values of Proposition: " + interp.parse);
+            for (String i : interp.truthmaps.keySet()) {
+                consoleprintln(i + "\t" + interp.truthmaps.get(i));
+            }
+
+            // Re-evaluate :)
+            interp.complex_eval();
+            result.setText(interp.truth_value ? "TRUE" : "FALSE");
 
             // Add all elements to the proposition
-            prop.getChildren().addAll(remove, proposition, propvalues, interpret, new Label("->"), result);
+            prop.getChildren().addAll(remove, proposition, propvalues, new Label("->"), result);
 
             // Add it to the list view & update it
             props.add(prop);
@@ -371,27 +420,22 @@ public class Main extends Application {
 
 
     public void insert_conjunction() {
-        
         propField.setText(propField.getText() + "&");
     }
 
     public void insert_disjunction() {
-        
         propField.setText(propField.getText() + "|");
     }
 
     public void insert_negation() {
-        
         propField.setText(propField.getText() + "!");
     }
 
     public void insert_condition() {
-        
         propField.setText(propField.getText() + "->");
     }
 
     public void insert_bicondition() {
-        
         propField.setText(propField.getText() + "<->");
     }
 }
