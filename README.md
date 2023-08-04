@@ -1,8 +1,10 @@
 # About Propositions LIVE
 Propositions LIVE is a Java program designed to parse and interpret varieties of logical propositions, utilizing a custom interpreter and parser to evaluate user input while also utilizing standard order of precedence for propositions.
 
-# Usage Instructions
-Propositions LIVE requires Java 17 to be installed on the user-system. The JAR will not run on a JRE purposed for lower versions. Once installed, install the Propositions LIVE .jar file, and run it. Upon creation, it will  To use Propositions LIVE, head over to any of the included tabs and start evaluating!
+# Getting Started
+Propositions LIVE requires Java 17 at the minimum to be installed on the user-system in order to run. The JAR will not run on a JRE purposed for lower versions. Once installed, install the Propositions LIVE .jar file, and run it. 
+
+Upon first launch, it will create a `config.properties` file with properties assigned. Leave this in the same directory as your Propositions LIVE JAR.
 
 ## Propositions
 Users can evaluate propositions either using PL's *Simple* method, or the *Complex* method. 
@@ -15,7 +17,7 @@ The *Complex* evaluation method assumes that each proposition has their own uniq
 
 To the left of any proposition lies a remove button, which removes any proposition from the view at any current moment. 
 
-A read-only console is available as a separate tab, next to the user-input tab, allowing the user to see a preliminary debugging view of Propositions LIVE!
+A read-only console is available as a separate tab, next to the user-input tab, allowing the user to see a preliminary debugging view of Propositions LIVE. Any errors are in red text. Normal outputs are in black text.
 
 ## Truth Tables
 Under Development
@@ -23,25 +25,30 @@ Under Development
 ## Tree Method
 Under Development
 
-# Development
-Propositions LIVE was developed in IntelliJ IDEA, using Oracle's Java SDK 17.0.2, AtlantaFX, JavaFX 20, and Gluon SceneBuilder. This GitHub repo can be used as an entire standalone project, ready to download for use by IntelliJ. Simply download and import the project!
+# Getting Started (Development)
+Propositions LIVE was developed in IntelliJ IDEA, using Oracle's Java SDK 17.0.2, AtlantaFX, JavaFX 20, and Gluon SceneBuilder. The repo itself is usable as an IntelliJ project.
 
 ## Running inside the IDE
-As mentioned before, JavaFX is required to run any of these. To ensure it runs properly inside your IDE, ensure that your project structure contains javafx as an available library.
+Ensure the content inside your project matches the following configurations.
 
-JUnit is also used for unit testing, so ensure that is also installed and added to the proejct structure.
+### Project Structure > Modules > Dependencies
+![image](https://github.com/alexanderjalexander/propositionslive/assets/129627021/696d0470-dd06-49b3-89bf-b5dd51f4665d)
 
-Example Project Structure for IntelliJ: 
-![image](https://user-images.githubusercontent.com/129627021/234083199-a63d4c52-8c3b-42da-bb89-a4af91245aa7.png)
+### Project Structure > Libraries
+- MAVEN: io.github.mkpaz:atlantafx.base
+- javafx 17.0.6
+- Other Maven dependencies for JUnit, Opentest4J, etc.
 
+![image](https://github.com/alexanderjalexander/propositionslive/assets/129627021/765034e9-db78-4f3b-ae6b-6ca8353aaf53)
 
-## Artifacts
-When building your own version of Propositions LIVE, be sure to include all the binaries/.dll's located in your JavaFX SDK's bin folder (e.g. C:\Program Files\JavaFX\javafx-sdk-17.0.6\bin). This will supposedly fix any runtime errors related to JavaFX runtime images. 
+### Project Structure > Artifacts
+Ensure your output layout is the same. This current build works on Windows 10. Both JavaFX 17.0.6 and JavaFX 20 are required, the former for the main GUI, and the latter for AtlantaFX.
 
-E.g. In the image below, the files within the red square are the JavaFX binaries.
-![image](https://user-images.githubusercontent.com/129627021/234083625-d357ec22-b753-4411-a56c-8d1c59d26259.png)
+![image](https://github.com/alexanderjalexander/propositionslive/assets/129627021/0abecc1a-e028-49a6-b79f-5d5cb7336eb1)
 
 
 # Credits
-I would like to give extensive credit to my friend AJW for helping me out with the parser and interpreter, as well as the extensive funky Java bugs encountered during parse testing.
-I would also like to thank Robert Nystrom and his book "Crafting Interpreters", which helped out significantly during my work for Proposition LIVE's interpreter and parser.
+- To my Discrete Structures professor, for being an amazing professor and inspiring me to start this project
+- To my friend AJW, who helped massively with AST's when I was learning them
+- To Robert Nystrom, author of Crafting interpreters
+- To the people over at AtlantaFX, for creating a fantastic JavaFX Dark/Light mode theme.
