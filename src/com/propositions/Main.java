@@ -110,8 +110,8 @@ public class Main extends Application {
     @Override
     public void stop() {
         System.out.println("-----------------");
-        System.out.println("Exiting...");
         MainProperties.INSTANCE.exit();
+        System.out.println("Exiting...");
     }
 
     // ---------------------------------------------------------
@@ -148,12 +148,9 @@ public class Main extends Application {
     }
 
     public void update_darkmode_menu() {
-        System.out.print("update_darkmode_menu() called. ");
         if (MainProperties.INSTANCE.getDarkMode()) {
-            System.out.println("Updating button to \"Light Mode\"");
             darkModeMenu.setText("Light Mode");
         } else {
-            System.out.println("Updating button to \"Dark Mode\"");
             darkModeMenu.setText("Dark Mode");
         }
     }

@@ -73,7 +73,7 @@ public class MainProperties {
         File config_properties = new File("config.properties");
         try {
 
-            System.out.println("\nSaving User Properties...");
+            System.out.println("Saving User Properties...");
 
             OutputStream output = new FileOutputStream(config_properties);
 
