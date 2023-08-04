@@ -1,4 +1,10 @@
-# About Propositions LIVE
+# Propositions LIVE
+
+<p align="center">
+  <img alt="GitHub" src="https://img.shields.io/github/license/alexanderjalexander/propositionslive?style=flat-square">
+  <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/alexanderjalexander/propositionslive/total?style=flat-square">
+</p>
+
 Propositions LIVE is a Java program designed to parse and interpret varieties of logical propositions, utilizing a custom interpreter and parser to evaluate user input while also utilizing standard order of precedence for propositions.
 
 # Getting Started
