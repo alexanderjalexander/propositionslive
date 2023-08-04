@@ -32,14 +32,13 @@ CREATING GUI FOR THE PROGRAM
     DEP javafx
     * Simple & Complex Proposition Evaluation
     * Cut/Copy/Paste Functionality
-    * User-Console Tab
+    * Propositions Console
+    * Error and Exception Handling
 
 ----- TODOS ARE BELOW -----
 CREATING GUI FOR THE PROGRAM
     * Keyboard Shortcuts
-    * Different Element ID's for the Different Tabs
-    * Truth Table Tab
-    * Tree Method Tab
+    * Propositions Tab Derivation Tree
 GENERATING TRUTH TABLES
     * Given any proposition, generate truth-table of the entire proposition
 TREE METHOD ALGORITHM
