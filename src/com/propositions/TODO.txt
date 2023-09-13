@@ -39,6 +39,7 @@ CREATING GUI FOR THE PROGRAM
 CREATING GUI FOR THE PROGRAM
     * Keyboard Shortcuts
     * Propositions Tab Derivation Tree
+    * Copyable Error Console
 GENERATING TRUTH TABLES
     * Given any proposition, generate truth-table of the entire proposition
 TREE METHOD ALGORITHM

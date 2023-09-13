@@ -1,10 +1,14 @@
 module propositionslive {
     requires javafx.graphics;
-    requires org.junit.jupiter.api;
+
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
     requires atlantafx.base;
-    exports com.propositions;
-    opens com.propositions to javafx.fxml;
+    exports com.app;
+
+    requires org.junit.jupiter.api;
+    requires org.junit.platform.commons;
+    requires org.junit.jupiter.engine;
+    opens com.app to javafx.fxml;
 }

@@ -1,10 +1,11 @@
-package com.propositions;
+package com.app;
 
+import com.propositions.PropositionInterpreter;
+import com.propositions.PropositionParser;
 import javafx.application.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuItem;
-import javafx.scene.text.Font;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Objects;
 
 import javafx.collections.FXCollections;
@@ -31,7 +31,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font.*;
 
 import atlantafx.base.theme.*;
 
@@ -126,7 +125,7 @@ public class Main extends Application {
     private TextField propField;
 
     // Setting up clipboard parameters
-    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    private final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
     // Set up proposition console viewport.
     @FXML

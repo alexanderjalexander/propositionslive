@@ -5,7 +5,7 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class PropositionTokenizer {
 	// A class that defines what a token is. 
-	static class Token {
+	public static class Token {
 		final TokenType type;
 		String lexeme;
 		boolean truth_value;
