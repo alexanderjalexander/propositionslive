@@ -28,6 +28,7 @@ import javafx.scene.control.Alert.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -65,7 +66,7 @@ public class Main extends Application {
             alert.show();
 
             // Print error to user-console
-            consoleerrorln("Handler caught exception: " + throwable + "\n" + sw.toString());
+            consoleerrorln("Handler caught exception: " + throwable + "\n" + sw);
         });
 
         // Handle user properties
@@ -120,9 +121,11 @@ public class Main extends Application {
     private ListView<Pane> propView = new ListView<>();
     private final ObservableList<Pane> props = FXCollections.observableArrayList();
 
-    // Set up text field
+    // Set up text fields
     @FXML
     private TextField propField;
+    @FXML
+    private TextField truthField;
 
     // Setting up clipboard parameters
     private final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -134,6 +137,9 @@ public class Main extends Application {
 
     @FXML
     private MenuItem darkModeMenu;
+
+    @FXML
+    private TableView truth_table = new TableView();
 
 
     public void userAlert(String title, String message, Exception error) {
@@ -244,7 +250,7 @@ public class Main extends Application {
             // Attempt to parse the user input.
             PropositionInterpreter interp;
             try {
-                interp = new PropositionInterpreter(propField.getText(), false, false);
+                interp = new PropositionInterpreter(propField.getText(), true, false);
             } catch (PropositionParser.ParseError error) {
                 userAlert("Interpreting Error",
                         ("Error when interpreting string '" + propField.getText() + "':"
@@ -414,6 +420,33 @@ public class Main extends Application {
         propField.clear();
     }
 
+    public void clear_truth_table() {
+        truth_table.getColumns().clear();
+    }
+    public void new_truth_table() {
+        // Clear Truth Table
+        clear_truth_table();
+
+        // Create new proposition interp and attempt to evaluate
+        PropositionInterpreter interp;
+        try {
+            interp = new PropositionInterpreter(truthField.getText(), false, false);
+        } catch (PropositionParser.ParseError error) {
+            userAlert("Interpreting Error",
+                    ("Error when interpreting string '" + truthField.getText() + "':"
+                            + "\nPlease check your proposition and try again."
+                            + "\nIf you believe this is an error, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues"),
+                    error);
+            return;
+        }
+        // For every proposition within the hashmap provided, create new columns in the table
+        for (String i : interp.truthmaps.keySet()) {
+            truth_table.getColumns().add(new TableColumn<>(i));
+        }
+        truth_table.getColumns().add(new TableColumn<>(truthField.getText()));
+
+        //
+    }
 
     public void insert_conjunction() {
         propField.setText(propField.getText() + "&");
