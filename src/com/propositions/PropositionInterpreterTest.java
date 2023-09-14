@@ -13,7 +13,15 @@ class PropositionInterpreterTest {
     @Test
     void test1() {
         PropositionInterpreter propinterp = new PropositionInterpreter("!P & !Q", true);
+        System.out.println("!P & !Q = " + propinterp.truth_value);
         assertFalse(propinterp.truth_value);
+    }
+
+    @Test
+    void test1_1() {
+        PropositionInterpreter propinterp = new PropositionInterpreter("P", true);
+        System.out.println("P = " + propinterp.truth_value);
+        assertTrue(propinterp.truth_value);
     }
 
     @Test
