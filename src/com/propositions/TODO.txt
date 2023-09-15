@@ -25,6 +25,8 @@ PROPOSITION SYNTAX ERROR DETECTION
 EVALUATING A GIVEN PROPOSITION AST
 	--> PropositionInterpreter.java
 	--> PropositionInterpreterTest.java
+GENERATING TRUTH TABLES
+    * Given any proposition, generate truth-table of the entire proposition
 CREATING GUI FOR THE PROGRAM
     --> Main.java
     --> MainController.java
@@ -40,8 +42,6 @@ CREATING GUI FOR THE PROGRAM
     * Keyboard Shortcuts
     * Propositions Tab Derivation Tree
     * Copyable Error Console
-GENERATING TRUTH TABLES
-    * Given any proposition, generate truth-table of the entire proposition
 TREE METHOD ALGORITHM
     * Assuming Several Statements Evaluate to True, find the respective TV's of Props
     * Create a new tree for the statements, and go from there
