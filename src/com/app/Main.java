@@ -147,6 +147,12 @@ public class Main extends Application {
     @FXML
     private TextField truthField;
 
+    // Set up TabPane
+    @FXML
+    private TabPane tabs;
+    @FXML
+    private Tab propositions, truth_tables;
+
     // Setting up clipboard parameters
     private final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
@@ -554,23 +560,41 @@ public class Main extends Application {
         return true;
     }
 
-    public void insert_conjunction() {
-        propField.setText(propField.getText() + "&");
+    private TextField tab_textfield_check() throws IOException {
+        String id = tabs.getSelectionModel().getSelectedItem().getId();
+        switch(id) {
+            case "propositions":
+                return propField;
+            case "truth_tables":
+                return truthField;
+            default:
+                throw new IOException("Attempted to read nonexistent tab '" + id + "'.");
+        }
     }
 
-    public void insert_disjunction() {
-        propField.setText(propField.getText() + "|");
+    public void insert_conjunction() throws IOException {
+        TextField temp = tab_textfield_check();
+        System.out.println("Inputting Conjunction\tCaret Position:" + temp.getCaretPosition());
+        temp.insertText(temp.getCaretPosition(), "&");
     }
 
-    public void insert_negation() {
-        propField.setText(propField.getText() + "!");
+    public void insert_disjunction() throws IOException {
+        TextField temp = tab_textfield_check();
+        temp.insertText(temp.getCaretPosition(), "|");
     }
 
-    public void insert_condition() {
-        propField.setText(propField.getText() + "->");
+    public void insert_negation() throws IOException {
+        TextField temp = tab_textfield_check();
+        temp.insertText(temp.getCaretPosition(), "!");
     }
 
-    public void insert_bicondition() {
-        propField.setText(propField.getText() + "<->");
+    public void insert_condition() throws IOException {
+        TextField temp = tab_textfield_check();
+        temp.insertText(temp.getCaretPosition(), "->");
+    }
+
+    public void insert_bicondition() throws IOException {
+        TextField temp = tab_textfield_check();
+        temp.insertText(temp.getCaretPosition(), "<->");
     }
 }

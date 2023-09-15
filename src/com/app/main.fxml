@@ -46,9 +46,9 @@
       </MenuBar>
    </top>
    <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Propositions">
+          <Tab fx:id="propositions" text="Propositions">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <bottom>
@@ -151,7 +151,7 @@
                   </BorderPane>
                </content>
           </Tab>
-            <Tab text="Truth Tables">
+            <Tab fx:id="truth_tables" text="Truth Tables">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <bottom>
