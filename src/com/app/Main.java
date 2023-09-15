@@ -9,6 +9,7 @@ import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.stage.*;
 import javafx.scene.*;
@@ -61,13 +62,26 @@ public class Main extends Application {
             StringWriter sw = new StringWriter(); PrintWriter pw = new PrintWriter(sw);
             throwable.printStackTrace(pw);
 
+            // Create StackTrace Area
+            TextArea exc = new TextArea(sw.toString());
+            exc.setEditable(false); exc.setWrapText(false);
+            exc.setMaxWidth(Double.MAX_VALUE); exc.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setVgrow(exc, Priority.ALWAYS); GridPane.setHgrow(exc, Priority.ALWAYS);
+
+            // Create Content
+            GridPane content = new GridPane();
+            content.setMaxWidth(Double.MAX_VALUE);
+            content.add(new Label("Full Stacktrace: "), 0, 0);
+            content.add(exc, 0, 1);
+
             // Create the alert
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("A runtime exception occurred");
-            alert.setContentText("The following run-time exception occurred while trying to run your program:"
-                    + "\n\n\"" + throwable + ": " + throwable.getMessage()
-                    + "\"\n\n" + "Extra details are covered within the console."
-                    + "\n\nIf the problem persists, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues");
+            alert.setContentText("""
+                    The following run-time exception occurred while trying to run your program.
+
+                    "If the problem persists, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues""");
+            alert.getDialogPane().setExpandableContent(content);
             alert.setHeight(400); alert.setWidth(200); alert.setResizable(true);
             alert.show();
 
@@ -428,6 +442,7 @@ public class Main extends Application {
 
     public void clear_truth_table() {
         truth_table.getColumns().clear();
+        truth_table.getItems().clear();
     }
     public void new_truth_table() {
         // Clear Truth Table
@@ -469,11 +484,11 @@ public class Main extends Application {
             values.add(interp.truthmaps.get(i));
 
             // Initiate results with "columns" representing each prop
-            results.add(new ArrayList<Boolean>());
+            results.add(new ArrayList<>());
         }
 
         // Add another row for the result column's rows
-        results.add(new ArrayList<Boolean>());
+        results.add(new ArrayList<>());
 
         // Calculate every possible value using the new values
         do {
@@ -486,24 +501,29 @@ public class Main extends Application {
         } while(truth_next_assignment(values));
 
         // Name Column Creation
-        for (int i = 0; i < names.size(); i++) {
-            // Create the new column
-            TableColumn<List<String>, String> col = new TableColumn<>(names.get(i));
-            col.setSortable(false);
-            final int temp = i;
-            col.setCellValueFactory(data -> {
-                return new ReadOnlyStringWrapper(data.getValue().get(temp));
-            });
-            truth_table.getColumns().add(col);
+        for (int i = 0; i <= names.size(); i++) {
+            if (i < names.size()) {
+                // Create the new column
+                TableColumn<List<String>, String> col = new TableColumn<>(names.get(i));
+                col.setSortable(false);
+                final int temp = i;
+                col.setCellValueFactory(data -> {
+                    return new ReadOnlyStringWrapper(data.getValue().get(temp));
+                });
+                truth_table.getColumns().add(col);
+            } else {
+                // Create a final column for the proposition as a whole
+                TableColumn<List<String>, String> col = new TableColumn<>(truthField.getText());
+                col.setSortable(false);
+                final int temp = i;
+                col.setCellValueFactory(data -> {
+                    return new ReadOnlyStringWrapper(data.getValue().get( temp ));
+                });
+                truth_table.getColumns().add(col);
+            }
         }
 
-        // Create a final column for the proposition as a whole
-        TableColumn<List<String>, String> col = new TableColumn<>(truthField.getText());
-        col.setSortable(false);
-        col.setCellValueFactory(data -> {
-            return new ReadOnlyStringWrapper(data.getValue().get(2));
-        });
-        truth_table.getColumns().add(col);
+
 
         // Add data to rows one by one
         for (int i = 0; i < results.get(0).size(); i++) {
