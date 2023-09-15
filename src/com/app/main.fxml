@@ -157,7 +157,7 @@
                      <bottom>
                         <TabPane maxHeight="-Infinity" prefHeight="200.0" prefWidth="791.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                            <tabs>
-                              <Tab text="Proposition Input">
+                              <Tab text="Truth Table Input">
                                  <content>
                                     <GridPane>
                                        <columnConstraints>
