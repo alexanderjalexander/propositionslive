@@ -574,27 +574,26 @@ public class Main extends Application {
 
     public void insert_conjunction() throws IOException {
         TextField temp = tab_textfield_check();
-        System.out.println("Inputting Conjunction\tCaret Position:" + temp.getCaretPosition());
-        temp.insertText(temp.getCaretPosition(), "&");
+        temp.setText(temp.getText() + " & ");
     }
 
     public void insert_disjunction() throws IOException {
         TextField temp = tab_textfield_check();
-        temp.insertText(temp.getCaretPosition(), "|");
+        temp.setText(temp.getText() + " | ");
     }
 
     public void insert_negation() throws IOException {
         TextField temp = tab_textfield_check();
-        temp.insertText(temp.getCaretPosition(), "!");
+        temp.setText(temp.getText() + "!");
     }
 
     public void insert_condition() throws IOException {
         TextField temp = tab_textfield_check();
-        temp.insertText(temp.getCaretPosition(), "->");
+        temp.setText(temp.getText() + " -> ");
     }
 
     public void insert_bicondition() throws IOException {
         TextField temp = tab_textfield_check();
-        temp.insertText(temp.getCaretPosition(), "<->");
+        temp.setText(temp.getText() + " <-> ");
     }
 }
