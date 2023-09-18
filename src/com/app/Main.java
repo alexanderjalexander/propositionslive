@@ -89,8 +89,6 @@ public class Main extends Application {
 
         // Handle user properties
         MainProperties.init();
-        System.out.println("Reading User Properties...");
-        System.out.println("MainProperties.getDarkMode() = " + MainProperties.INSTANCE.getDarkMode());
 
         // Add cell resizing back to the stylesheets.
         if (MainProperties.INSTANCE.getDarkMode()) {
@@ -114,6 +112,8 @@ public class Main extends Application {
                 }
                 """));
         }
+
+        System.out.println("TabPane State: " + tabs);
 
         propView.setId("propView");
         propConsole.setId("propConsole");
@@ -147,9 +147,9 @@ public class Main extends Application {
 
     // Set up TabPane
     @FXML
-    private TabPane tabs;
-    @FXML
     private Tab propositions, truth_tables;
+    @FXML
+    private TabPane tabs;
 
     // Setting up clipboard parameters
     private final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
