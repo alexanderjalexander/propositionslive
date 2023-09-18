@@ -54,6 +54,11 @@ public class Main extends Application {
         stage.setMinWidth(480);
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main.fxml")));
 
+        // Attempt to select tab
+//        TabPane tabs_pane = (TabPane) root.lookup("#tabs");
+//        System.out.println("tabs = " + tabs_pane.toString());
+
+
         // Override Default Exception Handler
         Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
             // Convert Stack Trace to readable message
@@ -73,7 +78,7 @@ public class Main extends Application {
             content.add(exc, 0, 1);
 
             // Create the alert
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("A runtime exception occurred");
             alert.setContentText("""
                     The following run-time exception occurred while trying to run your program.
@@ -101,7 +106,8 @@ public class Main extends Application {
                     -fx-cell-size: -1;
                 }
                 """));
-        } else {
+        }
+        else {
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
             root.getStylesheets().add(Styles.toDataURI("""
                 #propView .list-cell {
