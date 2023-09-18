@@ -26,7 +26,13 @@ To the left of any proposition lies a remove button, which removes any propositi
 A read-only console is available as a separate tab, next to the user-input tab, allowing the user to see a preliminary debugging view of Propositions LIVE. Any errors are in red text. Normal outputs are in black text.
 
 ## Truth Tables
-Under Development
+Users can also evaluate every possible combination of a proposition using a truth table! 
+
+The input methods remain the same as the proposition tab, but will instead create a whole table to evaluate every possible combination of input to the proposition that's possible.
+
+The *EVALUATE* button will evaluate the entire proposition in the field as is. 
+
+The *CLEAR* button will clear the table. This operation also automatically happens any time you press the EVALUATE button.
 
 ## Tree Method
 Under Development
