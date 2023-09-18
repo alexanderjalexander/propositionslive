@@ -4,13 +4,11 @@ import com.propositions.PropositionInterpreter;
 import com.propositions.PropositionParser;
 import javafx.application.*;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.control.skin.TableColumnHeader;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.fxml.FXMLLoader;
@@ -454,6 +452,8 @@ public class Main extends Application {
         // Clear Truth Table
         clear_truth_table();
 
+        truth_table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         // Create new proposition interp and attempt to evaluate
         PropositionInterpreter interp;
         try {
@@ -510,6 +510,7 @@ public class Main extends Application {
         for (int i = 0; i <= names.size(); i++) {
             if (i < names.size()) {
                 // Create the new column
+                // TODO: find out why artifact columns don't automatically divide size like IntelliJ does
                 TableColumn<List<String>, String> col = new TableColumn<>(names.get(i));
                 col.setSortable(false);
                 final int temp = i;
@@ -517,6 +518,7 @@ public class Main extends Application {
                     return new ReadOnlyStringWrapper(data.getValue().get(temp));
                 });
                 truth_table.getColumns().add(col);
+                System.out.println("Column with name \"" + names.get(i) + "\" added. Width = " + col.getWidth());
             } else {
                 // Create a final column for the proposition as a whole
                 TableColumn<List<String>, String> col = new TableColumn<>(truthField.getText());
@@ -526,10 +528,9 @@ public class Main extends Application {
                     return new ReadOnlyStringWrapper(data.getValue().get( temp ));
                 });
                 truth_table.getColumns().add(col);
+                System.out.println("Column with name \"" + truthField.getText() + "\" added. Width = " + col.getWidth());
             }
         }
-
-
 
         // Add data to rows one by one
         for (int i = 0; i < results.get(0).size(); i++) {
