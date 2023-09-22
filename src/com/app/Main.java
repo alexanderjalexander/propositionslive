@@ -49,9 +49,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         System.out.println("Initializing Propositions LIVE...");
+        stage.setMinWidth(760);
+        stage.setMinHeight(520);
         stage.setTitle("Propositions LIVE");
-        stage.setMinHeight(480);
-        stage.setMinWidth(480);
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main.fxml")));
 
         // Attempt to select tab
