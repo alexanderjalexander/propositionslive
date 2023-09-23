@@ -50,7 +50,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         System.out.println("Initializing Propositions LIVE...");
         stage.setMinWidth(760);
-        stage.setMinHeight(520);
+        stage.setMinHeight(600);
         stage.setTitle("Propositions LIVE");
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main.fxml")));
 
