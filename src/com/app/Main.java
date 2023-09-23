@@ -119,7 +119,7 @@ public class Main extends Application {
                 """));
         }
 
-        System.out.println("TabPane State: " + tabs);
+//        System.out.println("TabPane State: " + tabs);
 
         propView.setId("propView");
         propConsole.setId("propConsole");
