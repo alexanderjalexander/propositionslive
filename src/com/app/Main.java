@@ -308,10 +308,9 @@ public class Main extends Application {
             userAlert("Empty Input Error", "Cannot parse an empty string. Try again!", new IOException("Empty Input is Invalid."));
         }
         else {
-            // Attempt to parse the user input.
-            PropositionInterpreter interp;
+            boolean result;
             try {
-                interp = new PropositionInterpreter(propField.getText(), false, false);
+                result = PropositionsHandler.new_complex(propField.getText(), props, propConsoleEntries, propConsole);
             } catch (PropositionParser.ParseError error) {
                 userAlert("Interpreting Error",
                         ("Error when interpreting string '" + propField.getText() + "':"
@@ -319,109 +318,19 @@ public class Main extends Application {
                         + "\nIf you believe this is an error, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues"),
                         error);
                 return;
+            } catch (IllegalArgumentException error) {
+                userAlert("Interpreting Error",
+                        ("Error when interpreting string '" + propField.getText() + "':"
+                                + "\n" + error.getMessage()
+                                + "\nIf you believe this is an error, please raise an issue at https://github.com/alexanderjalexander/propositionslive/issues"),
+                        error);
+                return;
             }
 
             // Print out tree, debugging purposes
-            consoleprintln("Interpreted \"" + propField.getText() + "\" as: " + interp.parse + "\tMode: Complex.");
+            consoleprintln("Interpreted \"" + propField.getText() + "\" as: " + result + "\tMode: Complex.");
 
             // Create the new HBox to put inside the ListView
-            HBox prop = new HBox(25);
-            Button remove = new Button("X");
-            remove.setOnAction(e1 -> props.remove(prop));
-            Label proposition = new Label(propField.getText());
-            proposition.setStyle("-fx-font-style: italic;");
-
-            Label result = new Label("");
-            result.setStyle("-fx-font-style: italic;");
-
-            // Times New Roman
-
-            // Create radio buttons for each proposition
-            VBox propvalues = new VBox(10);
-            for (String i : interp.truthmaps.keySet()) {
-                HBox propvalue = new HBox(10);
-
-                Label proplabel = new Label(i + ": ");
-                ToggleGroup radios = new ToggleGroup();
-                RadioButton true_button = new RadioButton("True");
-                true_button.setId(i);
-                true_button.setToggleGroup(radios);
-                true_button.setSelected(true);
-                true_button.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        // Update the truth value of proposition
-                        interp.truthmaps.replace(i, true_button.isSelected());
-
-                        // Print out each prop and truth values to system console.
-                        consoleprintln("Updating Truth Value of Proposition: " + interp.parse);
-                        consoleprintln("\t"+ i + "\t" + interp.truthmaps.get(i));
-                        consoleprintln("\tNew Resulting Truth Value: " + (interp.truth_value ? "TRUE" : "FALSE"));
-
-                        // Re-evaluate :)
-                        interp.complex_eval();
-                        result.setText(interp.truth_value ? "TRUE" : "FALSE");
-                    }
-                });
-
-                RadioButton false_button = new RadioButton("False");
-                false_button.setToggleGroup(radios);
-                false_button.setId(i);
-                false_button.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        // Update the truth value of proposition
-                        interp.truthmaps.replace(i, !false_button.isSelected());
-
-                        // Print out each prop and truth values to system console.
-                        consoleprintln("Updating Truth Value of Proposition: " + interp.parse);
-                        consoleprintln("\t"+ i + "\t" + interp.truthmaps.get(i));
-                        consoleprintln("\tNew Resulting Truth Value: " + (interp.truth_value ? "TRUE" : "FALSE"));
-
-                        // Re-evaluate :)
-                        interp.complex_eval();
-                        result.setText(interp.truth_value ? "TRUE" : "FALSE");
-                    }
-                });
-
-                propvalue.getChildren().addAll(proplabel, true_button, false_button);
-                propvalues.getChildren().add(propvalue);
-            }
-            propvalues.setAlignment(Pos.CENTER_LEFT);
-
-            VBox.setVgrow(result, Priority.ALWAYS);
-            prop.setAlignment(Pos.CENTER_LEFT);
-
-            // Iterate through, updating the hashmap as needed
-            for (String i : interp.truthmaps.keySet()) {
-                for (Node j : propvalues.getChildren()) {
-                    for (Node k : ((HBox) j).getChildren()) {
-                        if ((Objects.equals(k.getId(), i)) && (k instanceof RadioButton)) {
-                            if (((RadioButton) k).getText().compareToIgnoreCase("True") == 0) {
-                                interp.truthmaps.replace(i, ((RadioButton) k).isSelected());
-                            } else {
-                                interp.truthmaps.replace(i, !((RadioButton) k).isSelected());
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Print out each prop and truth values to system console.
-            consoleprintln("Updating Truth Values of Proposition: " + interp.parse);
-            for (String i : interp.truthmaps.keySet()) {
-                consoleprintln(i + "\t" + interp.truthmaps.get(i));
-            }
-
-            // Re-evaluate :)
-            interp.complex_eval();
-            result.setText(interp.truth_value ? "TRUE" : "FALSE");
-
-            // Add all elements to the proposition
-            prop.getChildren().addAll(remove, proposition, propvalues, new Label("->"), result);
-
-            // Add it to the list view & update it
-            props.add(prop);
             propView.setItems(props);
         }
         // Clear user-input field.
