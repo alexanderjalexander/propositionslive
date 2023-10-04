@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TruthTable {
+public class TruthTableHandler {
     public static void clear_truth_table(TableView<List<String>> truth_table) {
         truth_table.getColumns().clear();
         truth_table.getItems().clear();

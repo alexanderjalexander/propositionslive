@@ -448,11 +448,11 @@ public class Main extends Application {
     }
 
     public void clear_truth_table() {
-        TruthTable.clear_truth_table(truth_table);
+        TruthTableHandler.clear_truth_table(truth_table);
     }
     public void new_truth_table() {
         try {
-            TruthTable.new_truth_table(truth_table, truthField);
+            TruthTableHandler.new_truth_table(truth_table, truthField);
         } catch (PropositionParser.ParseError error) {
             userAlert("Interpreting Error",
                     ("Error when interpreting string '" + truthField.getText() + "':"
