@@ -275,9 +275,9 @@ public class Main extends Application {
             userAlert("Empty Input Error", "Cannot parse an empty string. Try again!", new IOException("Empty Input is Invalid."));
         } else {
             // Attempt to parse the user input.
-            PropositionInterpreter interp;
+            boolean result;
             try {
-                interp = new PropositionInterpreter(propField.getText(), true, false);
+                result = PropositionsHandler.new_simple(propField.getText(), props);
             } catch (PropositionParser.ParseError error) {
                 userAlert("Interpreting Error",
                         ("Error when interpreting string '" + propField.getText() + "':"
@@ -295,27 +295,8 @@ public class Main extends Application {
             }
 
             // Print out for debugging purposes.
-            consoleprintln("Interpreted \"" + propField.getText() + "\" as: " + interp.parse + "\tMode: Simple.");
+            consoleprintln("Interpreted \"" + propField.getText() + "\" as: " + result + "\tMode: Simple.");
 
-            // Create the new HBox to put inside the ListView
-            FlowPane prop = new FlowPane();
-            prop.setVgap(10); prop.setHgap(25);
-            prop.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            prop.setPrefHeight(Region.USE_COMPUTED_SIZE);
-
-            Button remove = new Button("X");
-            Label proposition = new Label(propField.getText());
-            proposition.setStyle("-fx-font-style: italic;");
-
-            Label result = new Label(interp.truth_value ? "TRUE" : "FALSE");
-            result.setStyle("-fx-font-style: italic;");
-
-            remove.setOnAction(e1 -> props.remove(prop));
-
-            prop.setAlignment(Pos.CENTER_LEFT);
-            prop.getChildren().addAll(remove, proposition, new Label("->"), result);
-
-            props.add(prop);
             propView.setItems(props);
         }
         propField.clear();
