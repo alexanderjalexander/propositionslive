@@ -69,7 +69,6 @@ public class TruthTableHandler {
         for (int i = 0; i <= names.size(); i++) {
             if (i < names.size()) {
                 // Create the new column
-                // TODO: find out why artifact columns don't automatically divide size like IntelliJ does
                 TableColumn<List<String>, String> col = new TableColumn<>(names.get(i));
                 col.setSortable(false);
                 final int temp = i;
