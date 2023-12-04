@@ -25,6 +25,10 @@ To the left of any proposition lies a remove button, which removes any propositi
 
 A read-only console is available as a separate tab, next to the user-input tab, allowing the user to see a preliminary debugging view of Propositions LIVE. Any errors are in red text. Normal outputs are in black text.
 
+![image](https://github.com/alexanderjalexander/propositionslive/assets/129627021/d379d957-93db-4841-ae39-1da90dfd83ac)
+
+Take the example above. The first two propositional statements assume that P, Q, and R are all true by default. The third, a complex proposition, allows you to modify the values of each variable to those that you wish.
+
 ## Truth Tables
 Users can also evaluate every possible combination of a proposition using a truth table! 
 
@@ -33,6 +37,9 @@ The input methods remain the same as the proposition tab, but will instead creat
 The *EVALUATE* button will evaluate the entire proposition in the field as is. 
 
 The *CLEAR* button will clear the table. This operation also automatically happens any time you press the EVALUATE button.
+
+![image](https://github.com/alexanderjalexander/propositionslive/assets/129627021/557efad4-0f33-4cb2-a739-e817aa9c55ba)
+
 
 ## Tree Method
 Under Development
